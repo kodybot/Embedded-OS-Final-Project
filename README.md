@@ -29,7 +29,15 @@ The robotic arm was constructed using PLA plastic, and each part of the robot wa
 
 ### Methods 
 
-BLOCK DIAGRAM/WIRE DIAGRAM 
+STM32 Nucleo 446RE -> Servo Control Task & UART
+User Input -> UART -> Specific Section of Servo Control Task
+
+User Inputs:
+L -> Rotate Arm Left, Lower Arm, Grab or Release object (depending if the last movement was grab or release) -> Raise Arm \
+R -> Same process as Left but on the Right side \
+Space Bar -> Rotate center and repeat same movements as L or R \
+E -> Stop all arm movements indefinitely until S is pressed \
+S -> Re-enable PWMs for Timers allowing for arm movement \
 
  
 
