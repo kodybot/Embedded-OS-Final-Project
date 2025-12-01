@@ -63,6 +63,6 @@ In conclusion, the robotic arm preformed all the functions we wrote for it and w
 
 We want to provide special thanks to Professor Ngo for providing the stl files used to design the whole robot. 
 
-References 
+### References 
 
  
