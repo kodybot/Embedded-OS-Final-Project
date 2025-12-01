@@ -7,8 +7,8 @@
 # Final Project Report 
 
 ## Members:
-Kody Byrd 
-Luis Mata Moreno 
+Kody Byrd \
+Luis Mata Moreno \
 Michael Stevenson 
 
 CDA 3631 Section 1 
