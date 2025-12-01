@@ -29,7 +29,7 @@ The robotic arm was constructed using PLA plastic, and each part of the robot wa
 
 ### Methods 
 
-STM32 Nucleo 446RE -> Servo Control Task & UART
+STM32 Nucleo 446RE -> Servo Control Task & UART \
 User Input -> UART -> Specific Section of Servo Control Task
 
 User Inputs:
