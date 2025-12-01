@@ -23,7 +23,9 @@ For our Final Project we designed, coded, and implemented a robotic arm system c
 
 ### Materials 
 
-The robotic arm was constructed using PLA plastic, and each part of the robot was designed using stl files provided to us through Professor Ngo. 3 MG996R Servos and 3 SG90 Micro-Servos were used to move the arm. A STM32 Nucleo 446RE board was used to program and control the 6 servos.
+The robotic arm was constructed using PLA plastic, and each part of the robot was designed using stl files provided to us through Professor Ngo. \
+3 MG996R Servos and 3 SG90 Micro-Servos were used to move the arm. \
+A STM32 Nucleo 446RE board was used to program and control the 6 servos.
 
  
 
