@@ -57,12 +57,11 @@ In conclusion, the robotic arm preformed all the functions we wrote for it and w
 
 ### Video Link
 
- 
 
 ### Acknowledgements 
 
 We want to provide special thanks to Professor Ngo for providing the stl files used to design the whole robot. 
 
 ### References 
-
+[Assembly Instructions](https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fhowtomechatronics.com%2Ftutorials%2Farduino%2Fdiy-arduino-robot-arm-with-smartphone-control%2F&data=05%7C02%7Ckbyrd4000%40floridapoly.edu%7C32965c2e293a482c2bcf08de1b0b16c0%7C8d84067d9ad745729b10133d36462aaa%7C1%7C0%7C638977931624884901%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=XPI8skTJ5wIBa%2BSy07%2FkEuWaQpNvrekO%2FTo1c42FLTI%3D&reserved=0)
  
