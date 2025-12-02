@@ -115,7 +115,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  MX_TIM2_Init();
+  MX_TIM2_Init();		//Initialize Timers
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, &Rx_data, 1);	//Enable UART
@@ -130,8 +130,8 @@ int main(void)
         HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
     }
 
-    /* create servo task */
-    if (xTaskCreate(ServoTask, "ServoTask", 256, NULL, tskIDLE_PRIORITY + 2, NULL) != pdPASS) {
+   
+    if (xTaskCreate(ServoTask, "ServoTask", 256, NULL, tskIDLE_PRIORITY + 2, NULL) != pdPASS) {		//Setup Servo Control Task
         Error_Handler();
     }
   /* USER CODE END 2 */
@@ -162,7 +162,6 @@ int main(void)
   /* Start scheduler */
   osKernelStart();
 
-  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -433,7 +432,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void Servo_SetPulse_us(uint16_t pulse_us)		//Servo safety bounds, can not move outside of these
+void Servo_SetPulse_us(uint16_t pulse_us)		//Servo Movement Limits
   {
     if (pulse_us < 500) pulse_us = 500;
     if (pulse_us > 2500) pulse_us = 2500;
@@ -475,7 +474,7 @@ void ServoTask(void *argument)	//Task for controlling servos
     for (;;) {
         if (xQueueReceive(ServoControlQueue, &cmd, portMAX_DELAY) == pdTRUE) {
             if (cmd == 'r') {
-            	while(BasePosition >= 550){
+            	while(BasePosition >= 550){			//Rotate Base Right
             		BasePosition -= 5;
             	    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, BasePosition);
             	    vTaskDelay(pdMS_TO_TICKS(10));
@@ -492,7 +491,7 @@ void ServoTask(void *argument)	//Task for controlling servos
             	    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, Arm1Position);
             	    vTaskDelay(pdMS_TO_TICKS(10));
             	}
-            	if(GrabberPosition >= 700){
+            	if(GrabberPosition >= 700){			//Close or Open Grabber 
             		while(GrabberPosition >= 700){
             			GrabberPosition -= 5;
             			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, GrabberPosition);
@@ -539,7 +538,7 @@ void ServoTask(void *argument)	//Task for controlling servos
             	    vTaskDelay(pdMS_TO_TICKS(10));
             	}
 
-            	if(GrabberPosition >= 700){
+            	if(GrabberPosition >= 700){			//Close or Open Grabber
             		while(GrabberPosition >= 700){
             			GrabberPosition -= 5;
             	        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, GrabberPosition);
@@ -598,7 +597,7 @@ void ServoTask(void *argument)	//Task for controlling servos
             	}
 
 
-            	if(GrabberPosition >= 700){
+            	if(GrabberPosition >= 700){			//Close or Open Grabber
             		while(GrabberPosition >= 700){
             			GrabberPosition -= 5;
             	        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, GrabberPosition);
@@ -628,9 +627,8 @@ void ServoTask(void *argument)	//Task for controlling servos
 
 
 
-            } else if (cmd == 'e') {
-                /* emergency stop - set neutral or disable PWM */
-				    /* Emergency stop: disable PWM outputs */
+            } else if (cmd == 'e') {			//Disable PWMs
+
 				    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
 				    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
 				    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
@@ -638,10 +636,10 @@ void ServoTask(void *argument)	//Task for controlling servos
 				    HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
 				    HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
 
-				    char str[] = "PWMs Off!\r\n\n";
+				    char str[] = "PWMs Disabled! Safety Engaged!\r\n\n";
 				    HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
 				}
-            else if(cmd == 's'){
+            else if(cmd == 's'){		//Enable PWMs
             	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
             	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
             	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
@@ -650,14 +648,13 @@ void ServoTask(void *argument)	//Task for controlling servos
             	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
 
-            	char str[] = "PWMs On!\r\n\n";
+            	char str[] = "PWMs Enabled! Safety Disengaged!\r\n\n";
             	HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
 
             }
 
 
             }
-            /* small pause to allow next command */
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
@@ -668,11 +665,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    /* re-arm receive first */
     HAL_UART_Receive_IT(huart, &Rx_data, 1);
 
-    /* Echo for debug (safe to call HAL_UART_Transmit here because it blocks;
-       if you want true non-blocking echo use a TX queue or send from a task) */
     if (Rx_data == 'r') {
         char str[] = "Received Right\r\n\n";
         HAL_UART_Transmit(huart, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
@@ -695,9 +689,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     	xQueueSendToFrontFromISR(ServoControlQueue, &Rx_data, &xHigherPriorityTaskWoken);
     }
 
-    /* send the received byte to servo task (ISR-safe) */
-
-    /* request a context switch if needed */
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
